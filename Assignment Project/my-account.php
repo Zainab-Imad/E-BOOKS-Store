@@ -106,7 +106,12 @@ include 'header.php';
                                 </div>
                                 <div class="input__box">
                                     <label>Password <span>*</span></label>
-                                    <input type="password" name="password">
+                                    <input type="password" name="password" id="password">
+                                </div>
+                                <div class="input__box">
+                                    <label>Confirm Password <span>*</span></label>
+                                    <input type="password" id="confirm_password">
+                                    <div class="alert-danger text-center" style="padding: 5px;" id='message'></div>
                                 </div>
                                 <div class="input__box">
                                     <label>Country<span>*</span></label>
@@ -134,4 +139,15 @@ include 'header.php';
         </div>
     </section>
     <!-- End My Account Area -->
-<?php include 'footer.php';
+<?php include 'footer.php';?>
+<script>
+    $('#message').hide();
+    $('#password, #confirm_password').on('keyup', function () {
+        if ($('#password').val() == $('#confirm_password').val()) {
+            $('#message').show();
+            $('#message').html('Matching').css('color', 'green');
+        } else
+            $('#message').show();
+        $('#message').html('Not Matching').css('color', 'red');
+    });
+</script>

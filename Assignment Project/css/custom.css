@@ -6,3 +6,5 @@
 	Note: This is custom css. All custom styles (user styles) declare here.
 
 **********************************************************************************/
+
+.ui-widget-header{border:1px solid #000000;background:#000000  50% 50% repeat-x}

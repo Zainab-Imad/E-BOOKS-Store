@@ -16,9 +16,10 @@ if (isset($_POST['submit'])){
     $customerId = $_SESSION['customer'];
     $totalPrice = $_POST['totalPrice'];
     $totalQty =$items;
+    $date    = date("Y.m.d");
 
-    $query = "insert into orders (customer_id,recipient_name,country,address,phone,total_price,total_qty,status_id) 
-              values ($customerId,'$name','$country','$address','$phone',$totalPrice,$totalQty,1)";
+    $query = "insert into orders (customer_id,recipient_name,country,address,phone,total_price,total_qty,status_id,order_date) 
+              values ($customerId,'$name','$country','$address','$phone',$totalPrice,$totalQty,1,'$date')";
     mysqli_query($conn,$query);
     $query = "select order_id from orders where order_id=(select last_insert_id() where customer_id= {$_SESSION['customer']})";
     $result = mysqli_query($conn,$query);
@@ -33,14 +34,19 @@ if (isset($_POST['submit'])){
             $price   = $singleProduct['pro_price'];
             $catName = $singleProduct['cat_name'];
 
-            $query   = "insert into orderdetails (pro_id,pro_name,img_one,price,cat_name,qty,order_id) values ($proId,'$name','$img',$price,'$catName',$qty,$orderId)";
+            $query = "insert into orderdetails (pro_id,pro_name,img_one,price,cat_name,qty,order_id) 
+                        values ($proId,'$name','$img',$price,'$catName',$qty,$orderId)";
+            mysqli_query($conn,$query);
+            $query = "update product set pro_qty=pro_qty-$qty where pro_id=$proId";
             mysqli_query($conn,$query);
         }
 
     }
     unset($_SESSION['product']);
     unset($_SESSION['qty']);
-    echo("<script>location.href = 'index.php';</script>");
+     $message = "<p class=\"alert alert-success\" style=\"font-weight: bold;font-size: 30px;\">
+                        Your Order Is Placed <span><i class=\"fa fa-check\"></i></span>
+                    </p>";
 }
 ?>
     <!-- Start Bradcaump area -->
@@ -66,34 +72,10 @@ if (isset($_POST['submit'])){
         <div class="container">
             <div class="row">
                 <div class="col-lg-12">
+                    <?php if (isset($message)){
+                        echo $message;
+                    }?>
                     <div class="wn_checkout_wrap">
-                        <div class="checkout_info">
-                            <span>Returning customer ?</span>
-                            <a class="showlogin" href="#">Click here to login</a>
-                        </div>
-                        <div class="checkout_login">
-                            <form class="wn__checkout__form" action="#">
-                                <p>If you have shopped with us before, please enter your details in the boxes below. If you are a new customer please proceed to the Billing & Shipping section.</p>
-
-                                <div class="input__box">
-                                    <label>Username or email <span>*</span></label>
-                                    <input type="text">
-                                </div>
-
-                                <div class="input__box">
-                                    <label>password <span>*</span></label>
-                                    <input type="password">
-                                </div>
-                                <div class="form__btn">
-                                    <button>Login</button>
-                                    <label class="label-for-checkbox">
-                                        <input id="rememberme" name="rememberme" value="forever" type="checkbox">
-                                        <span>Remember me</span>
-                                    </label>
-                                    <a href="#">Lost your password?</a>
-                                </div>
-                            </form>
-                        </div>
                         <div class="checkout_info">
                             <span>Have a coupon? </span>
                             <a class="showcoupon" href="#">Click here to enter your code</a>

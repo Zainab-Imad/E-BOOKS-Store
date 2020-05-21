@@ -47,25 +47,24 @@ include 'header.php';
                                             # code...
                                         ?>
                                         <tr>
-                                            <td class="product-thumbnail"><a href="#"><img src="admin/uploads/product/<?php echo $singleProduct['img_one'] ?>" alt="product img"></a></td>
+                                            <td class="product-thumbnail"><a href="#"><img src="admin/uploads/product/<?php echo $singleProduct['cat_name'].'/'.$singleProduct['img_one'] ?>" alt="product img"></a></td>
                                             <td class="product-name"><a href="#"><?php echo $singleProduct['pro_name'] ?></a></td>
-                                            <td class="product-price"><span class="amount"><?php echo $singleProduct['pro_price'] ?></span></td>
-                                            <input class="pId" type="text" value="<?php echo $singleProduct['pro_id']; ?>">
+                                            <td class="product-price"><span class="amount">$ <?php echo $singleProduct['pro_price'] ?></span></td>
                                             <td class="product-quantity"><?php echo $singleProduct['qty'] ?></td>
-                                            <td class="product-subtotal"><?php echo $singleProduct['pro_price']*$singleProduct['qty']; ?></td>
-                                            <td class="product-remove"><a href="#">X</a></td>
+                                            <td class="product-subtotal">$ <?php echo $singleProduct['pro_price']*$singleProduct['qty']; ?></td>
+                                            <td class="product-remove"><a href="?proIdRemove=<?php echo $singleProduct['pro_id'] ?>">X</a></td>
                                         </tr>
-                                    <?php }}else echo "<p class='text-center'>No Product Found</p>"?>
+                                    <?php }}else echo "<tr><td colspan='6'><p class='text-center alert-danger'>No Product Found</p></td></tr>";?>
                                     </tbody>
                                 </table>
                             </div>
-                        </form> 
+                        </form>
                         <div class="cartbox__btn">
                             <ul class="cart__btn__list d-flex flex-wrap flex-md-nowrap flex-lg-nowrap justify-content-between">
-                                <li><a href="#">Coupon Code</a></li>
-                                <li><a href="#">Apply Code</a></li>
-                                <li><a href="#">Update Cart</a></li>
-                                <li><a href="#">Check Out</a></li>
+                                <li><a href="index.php">Home</a></li>
+                                <li><div class="mini_action checkout">
+                                        <a class="checkout__btn" style="background-color: #000000;color: white" href="checkout.php">Go to Checkout</a>
+                                    </div></li>
                             </ul>
                         </div>
                     </div>
@@ -75,17 +74,15 @@ include 'header.php';
                         <div class="cartbox__total__area">
                             <div class="cartbox-total d-flex justify-content-between">
                                 <ul class="cart__total__list">
-                                    <li>Cart total</li>
-                                    <li>Sub Total</li>
+                                    <li>Qty total</li>
                                 </ul>
                                 <ul class="cart__total__tk">
-                                    <li>$70</li>
-                                    <li>$70</li>
+                                    <li><?php echo $items;?></li>
                                 </ul>
                             </div>
                             <div class="cart__total__amount">
                                 <span>Grand Total</span>
-                                <span>$140</span>
+                                <span>$ <?php echo $sum;?></span>
                             </div>
                         </div>
                     </div>

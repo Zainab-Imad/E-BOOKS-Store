@@ -165,19 +165,6 @@ if (isset ( $_GET ['proIdRemove'] )) {
 							<ul class="meninmenu d-flex justify-content-start">
 								<li class="drop with--one--item"><a href="index.php">Home</a></li>
 								<li class="drop"><a href="shop-grid.php">Shop</a>
-									<div class="megamenu mega02">
-										<ul class="item item02">
-											<li class="title">Shop Layout</li>
-											<li><a href="shop-grid.php">Shop Grid</a></li>
-											<li><a href="shop-grid.php">Shop List</a></li>
-										</ul>
-										<ul class="item item02">
-											<li class="title">Bargain Books</li>
-											<li><a href="shop-grid.php?bestselleres">Bargain Bestsellers</a></li>
-											<li><a href="shop-grid.php?underfive=5">Books Under $5</a></li>
-											<li><a href="shop-grid.php">Bargain Books</a></li>
-										</ul>
-									</div>
 								</li>
 								<li class="drop"><a href="shop-grid.php">Books</a>
 									<div class="megamenu mega03">
@@ -193,14 +180,6 @@ if (isset ( $_GET ['proIdRemove'] )) {
 											?>
 										</ul>
 										<ul class="item item03">
-											<li class="title">Customer Favourite</li>
-											<li><a href="shop-grid.html">Mystery</a></li>
-											<li><a href="shop-grid.html">Religion & Inspiration</a></li>
-											<li><a href="shop-grid.html">Romance</a></li>
-											<li><a href="shop-grid.html">Fiction/Fantasy</a></li>
-											<li><a href="shop-grid.html">Sleeveless</a></li>
-										</ul>
-										<ul class="item item03">
 											<li class="title">Collections</li>
 											<?php
 											$query = "select * from collection";
@@ -208,11 +187,24 @@ if (isset ( $_GET ['proIdRemove'] )) {
 											while ($coll = mysqli_fetch_assoc($result)){
 												# code...
 												if($coll['coll_id'] != 1){
-												echo "<li><a href='shop-grid.php?collId={$coll['coll_id']}'>{$coll['coll_name']}</a></li>";
+												echo "<li><a href='shop-grid.php?coll_id={$coll['coll_id']}'>{$coll['coll_name']}</a></li>";
 											}
 											}
 											?>
 										</ul>
+                                        <ul class="item item03">
+                                            <li class="title">By Author</li>
+                                            <?php
+                                            $query = "select * from author";
+                                            $result = mysqli_query($conn,$query);
+                                            while ($author = mysqli_fetch_assoc($result)){
+                                                # code...
+                                                if($author['author_id'] != 1){
+                                                    echo "<li><a href='shop-grid.php?authorId={$author['author_id']}'>{$author['author_name']}</a></li>";
+                                                }
+                                            }
+                                            ?>
+                                        </ul>
 									</div>
 								</li>
 								<li class="drop"><a href="shop-grid.html">Kids</a>
@@ -220,17 +212,20 @@ if (isset ( $_GET ['proIdRemove'] )) {
 										<ul class="item item02">
 											<li class="title">Top Collections</li>
                                             <?php
+                                            $query  = "select DISTINCT(collection.coll_id),coll_name from collection inner join product on collection.coll_id=product.coll_id where product.cat_id=16 order by collection.coll_id desc ";
+                                            $result = mysqli_query($conn,$query);
+                                            while ( $coll =mysqli_fetch_assoc($result)){
+                                                if ($coll['coll_id'] != 1) {
+                                                    echo "<li><a href=\"shop-grid.php?coll_id={$coll['coll_id']}\">{$coll['coll_name']}</a></li>";
+                                                }
+                                            }
+
                                             ?>
-											<li><a href="shop-grid.html">American Girl</a></li>
-											<li><a href="shop-grid.html">Diary Wimpy Kid</a></li>
-											<li><a href="shop-grid.html">Finding Dory</a></li>
-											<li><a href="shop-grid.html">Harry Potter</a></li>
-											<li><a href="shop-grid.html">Land of Stories</a></li>
 										</ul>
 										<ul class="item item02">
                                             <li class="title">New Collection</li>
                                             <?php
-                                            $query  = "select * from collection order by coll_id desc LIMIT 5";
+                                            $query  = "select DISTINCT(collection.coll_id),coll_name from collection inner join product on collection.coll_id=product.coll_id where product.cat_id=16";
                                             $result = mysqli_query($conn,$query);
                                             while ( $coll =mysqli_fetch_assoc($result)){
                                                 if ($coll['coll_id'] != 1) {
@@ -249,8 +244,7 @@ if (isset ( $_GET ['proIdRemove'] )) {
 					</div>
 					<div class="col-md-6 col-sm-6 col-6 col-lg-2">
 						<ul class="header__sidebar__right d-flex justify-content-end align-items-center">
-							<li class="shop_search"><a class="search__active" href="#"></a></li>
-							<li class="wishlist"><a href="#"></a></li>
+							<li class="wishlist"><a href="wishlist.php"></a></li>
 							<li class="shopcart"><a class="cartbox_active" href="#"><span class="product_qun"><?php
                                         if(isset($productCart)){
                                             echo count($productCart);
@@ -322,61 +316,17 @@ if (isset ( $_GET ['proIdRemove'] )) {
 									<div class="content-inner">
 										<div class="switcher-currency">
 											<strong class="label switcher-label">
-												<span>Currency</span>
-											</strong>
-											<div class="switcher-options">
-												<div class="switcher-currency-trigger">
-													<span class="currency-trigger">USD - US Dollar</span>
-													<ul class="switcher-dropdown">
-														<li>GBP - British Pound Sterling</li>
-														<li>EUR - Euro</li>
-													</ul>
-												</div>
-											</div>
-										</div>
-										<div class="switcher-currency">
-											<strong class="label switcher-label">
-												<span>Language</span>
-											</strong>
-											<div class="switcher-options">
-												<div class="switcher-currency-trigger">
-													<span class="currency-trigger">English01</span>
-													<ul class="switcher-dropdown">
-														<li>English02</li>
-														<li>English03</li>
-														<li>English04</li>
-														<li>English05</li>
-													</ul>
-												</div>
-											</div>
-										</div>
-										<div class="switcher-currency">
-											<strong class="label switcher-label">
-												<span>Select Store</span>
-											</strong>
-											<div class="switcher-options">
-												<div class="switcher-currency-trigger">
-													<span class="currency-trigger">Fashion Store</span>
-													<ul class="switcher-dropdown">
-														<li>Furniture</li>
-														<li>Shoes</li>
-														<li>Speaker Store</li>
-														<li>Furniture</li>
-													</ul>
-												</div>
-											</div>
-										</div>
-										<div class="switcher-currency">
-											<strong class="label switcher-label">
 												<span>My Account</span>
 											</strong>
 											<div class="switcher-options">
 												<div class="switcher-currency-trigger">
 													<div class="setting__menu">
-														<span><a href="#">Compare Product</a></span>
-														<span><a href="#">My Account</a></span>
-														<span><a href="#">My Wishlist</a></span>
-														<span><a href="logout.php">Log Out</a></span>
+                                                        <?php if(isset($_SESSION['customer'])){
+                                                            echo "<span><a href=\"wishlist.php\">My Wishlist</a></span><span><span><a href=\"logout.php\">Logout</a></span>";
+                                                        } else{
+                                                            echo "<span><a href='my-account.php'>Login</a></span>";
+                                                        }?>
+
 													</div>
 												</div>
 											</div>
@@ -417,12 +367,7 @@ if (isset ( $_GET ['proIdRemove'] )) {
 										<li><a href="single-product.html">Single Product</a></li>
 									</ul>
 								</li>
-								<li><a href="blog.html">Blog</a>
-									<ul>
-										<li><a href="blog.html">Blog Page</a></li>
-										<li><a href="blog-details.html">Blog Details</a></li>
-									</ul>
-								</li>
+
 								<li><a href="contact.html">Contact</a></li>
 							</ul>
 						</nav>

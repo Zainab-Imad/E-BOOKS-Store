@@ -86,21 +86,17 @@ include 'header.php';
 									<div class="actions_inner">
 										<ul class="add_to_links">
 											<li><a class="cart button btn" href="index.php?qty=1&cart=<?php echo $pro['pro_id'] ?>"><i class="bi bi-shopping-bag4"></i></a></li>
-											<li><a class="wishlist" href="wishlist.html"><i class="bi bi-shopping-cart-full"></i></a></li>
-											<li><a class="compare" href="#"><i class="bi bi-heart-beat"></i></a></li>
-											<li><a data-toggle="modal" title="Quick View" class="quickview modal-view detail-link" href="#productmodal"><i class="bi bi-search"></i></a></li>
+                                            <li><a class="wishlist" pro="<?php echo $pro['pro_id'] ?>" name="wishlist"><i class="bi bi-heart-beat"></i></a></li>
+                                            <li><a data-toggle="modal" pro-data="<?php echo $pro['pro_id'] ?>" title="Quick View" class="quickview modal-view detail-link" href="#productmodal"><i class="bi bi-search"></i></a></li>
 										</ul>
 									</div>
+
 								</div>
-								<div class="product__hover--content">
-									<ul class="rating d-flex">
-										<li class="on"><i class="fa fa-star-o"></i></li>
-										<li class="on"><i class="fa fa-star-o"></i></li>
-										<li class="on"><i class="fa fa-star-o"></i></li>
-										<li><i class="fa fa-star-o"></i></li>
-										<li><i class="fa fa-star-o"></i></li>
-									</ul>
-								</div>
+                                <div class="product__hover--content">
+                                    <ul class="rating d-flex">
+                                        <li style="color: #e59285">$ <?php echo $pro['pro_price']; ?></li>
+                                    </ul>
+                                </div>
 							</div>
 						</div>
 					</div>
@@ -126,10 +122,10 @@ include 'header.php';
 						</div>
 						<div class="newsletter__block text-center">
 							<p>Subscribe to our newsletters now and stay up-to-date with new collections, the latest lookbooks and exclusive offers.</p>
-							<form action="#">
+							<form action="mail.php" method="post">
 								<div class="newsletter__box">
-									<input type="email" placeholder="Enter your e-mail">
-									<button>Subscribe</button>
+									<input type="email" placeholder="Enter your e-mail" name="email">
+									<input type="submit" name="send">Subscribe</input>
 								</div>
 							</form>
 						</div>
@@ -198,21 +194,17 @@ include 'header.php';
 												<div class="actions_inner">
 													<ul class="add_to_links">
 														<li><a class="cart button btn" href="index.php?qty=1&cart=<?php echo $pro['pro_id']; ?>"><i class="bi bi-shopping-bag4"></i></a></li>
-														<li><a class="wishlist" href="wishlist.html"><i class="bi bi-shopping-cart-full"></i></a></li>
-														<li><a class="compare" href="#"><i class="bi bi-heart-beat"></i></a></li>
-														<li><a data-toggle="modal" title="Quick View" class="quickview modal-view detail-link" href="#productmodal"><i class="bi bi-search"></i></a></li>
+                                                        <li><a class="wishlist" pro="<?php echo $pro['pro_id'] ?>" name="wishlist"><i class="bi bi-heart-beat"></i></a></li>
+                                                        <li><a data-toggle="modal" title="Quick View" pro-data="<?php echo $pro['pro_id'] ?>" class="quickview modal-view detail-link" href="#productmodal"><i class="bi bi-search"></i></a></li>
 													</ul>
 												</div>
 											</div>
-											<div class="product__hover--content">
-												<ul class="rating d-flex">
-													<li class="on"><i class="fa fa-star-o"></i></li>
-													<li class="on"><i class="fa fa-star-o"></i></li>
-													<li class="on"><i class="fa fa-star-o"></i></li>
-													<li><i class="fa fa-star-o"></i></li>
-													<li><i class="fa fa-star-o"></i></li>
-												</ul>
-											</div>
+                                            <div class="product__hover--content">
+                                                <ul class="rating d-flex">
+                                                    <li style="color: #e59285">$ <?php echo $pro['pro_price']; ?></li>
+                                                </ul>
+
+                                            </div>
 										</div>
 									</div>
 								</div></div>
@@ -318,21 +310,17 @@ while ($pro=mysqli_fetch_assoc($result)) {
 						<div class="action">
 							<div class="actions_inner">
 								<ul class="add_to_links">
-									<li><a class="cart" href="cart.html"><i class="bi bi-shopping-bag4"></i></a></li>
-									<li><a class="wishlist" href="wishlist.html"><i class="bi bi-shopping-cart-full"></i></a></li>
-									<li><a class="compare" href="#"><i class="bi bi-heart-beat"></i></a></li>
-									<li><a data-toggle="modal" title="Quick View" class="quickview modal-view detail-link" href="#productmodal"><i class="bi bi-search"></i></a></li>
+									<li><a class="cart btn" href="index.php?qty=1&cart=<?php echo $pro['pro_id']; ?>"><i class="bi bi-shopping-bag4"></i></a></li>
+                                    <li><a class="wishlist" pro="<?php echo $pro['pro_id'] ?>" name="wishlist"><i class="bi bi-heart-beat"></i></a></li>
+                                    <li><a data-toggle="modal" title="Quick View" pro-data="<?php echo $pro['pro_id'] ?>" class="quickview modal-view detail-link" href="#productmodal"><i class="bi bi-search"></i></a></li>
 								</ul>
 							</div>
-						</div>
-						<div class="product__hover--content">
-							<ul class="rating d-flex">
-								<li class="on"><i class="fa fa-star-o"></i></li>
-								<li class="on"><i class="fa fa-star-o"></i></li>
-								<li class="on"><i class="fa fa-star-o"></i></li>
-								<li><i class="fa fa-star-o"></i></li>
-								<li><i class="fa fa-star-o"></i></li>
-							</ul>
+                            <div class="product__hover--content">
+                                <ul class="rating d-flex">
+                                    <li style="color: #e59285; margin-top: 20px;margin-right: 10px;">$ <?php echo $pro['price']; ?></li>
+                                </ul>
+
+                            </div>
 						</div>
 					</div>
 				</div>

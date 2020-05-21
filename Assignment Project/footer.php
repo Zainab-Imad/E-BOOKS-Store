@@ -65,6 +65,9 @@
 		                <div class="modal-body">
 		                    <div class="modal-product">
 		                        <!-- Start product images -->
+                                <?php
+
+                                ?>
 		                        <div class="product-images">
 		                            <div class="main-image images">
 		                                <img alt="big images" src="images/product/big-img/1.jpg">
@@ -83,6 +86,7 @@
 		                                </ul>
 		                                <div class="review">
 		                                    <a href="#">4 customer reviews</a>
+
 		                                </div>
 		                            </div>
 		                            <div class="price-box-3">
@@ -144,6 +148,25 @@
 	<script src="js/bootstrap.min.js"></script>
 	<script src="js/plugins.js"></script>
 	<script src="js/active.js"></script>
-	
+	<script>
+        $('.quickview').click(function () {
+            var x = $(this).attr('pro-data');
+            $.ajax({
+                type : "GET",
+                url :"proId.php?pro-id="+x,
+                success : function (data) {
+                    $('.modal-product').html(data);
+                }
+            });
+        });
+        $(document).on("click","a[name='wishlist']", function (e) {
+            var x = $(this).attr('pro');
+            $.ajax({
+                type : "GET",
+                url :"wishlistPro.php?pro-id="+x
+            });
+        });
+
+    </script>
 </body>
 </html>

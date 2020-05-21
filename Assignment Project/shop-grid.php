@@ -1,3 +1,5 @@
+
+
 <?php include 'admin/includes/connection.php';
 include 'header.php';
 if ( isset($_GET['catId'])) {
@@ -5,10 +7,13 @@ if ( isset($_GET['catId'])) {
     $result = mysqli_query($conn, $query);
     $cat = mysqli_fetch_assoc($result);
 }
-if (isset($_POST['filter'])){
-    $range =$_POST['range'];
-    
+function filter($amount){
+    $arr = explode(' - ',$amount);
+    $min = $arr[0];
+    $max = $arr[1];
+    return " and product.pro_price BETWEEN $min and $max order by pro_price asc";
 }
+
 ?>
 
 <!-- Start Bradcaump area -->
@@ -53,40 +58,31 @@ SELECT category.cat_id, `cat_name`, `cat_img`,count(product.cat_id) FROM `catego
                         </aside>
                         <aside class="wedget__categories pro--range">
                             <h3 class="wedget__title">Filter by price</h3>
-                            <div class="content-shopby">
-                                <div class="price_filter s-filter clear">
-                                    <form action="" method="post">
-                                        <div id="slider-range"></div>
-                                        <div class="slider__range--output">
-                                            <div class="price__output--wrap">
-                                                <div class="price--output">
-                                                    <span>Price :</span><input type="text" name="range" id="amount" value="" readonly="">
-                                                </div>
-                                                <div class="price--filter">
-                                                    <input type="submit" name="filter">Filter</input>
+                                        <form method="post" action="">
+                                            <div>
+                                                <div id="slider-range"></div>
+                                                <span>Price :</span><input type="text" id="amount" name="amount" readonly="">
+                                            </div>
+                                            <div>
+                                                <div style="margin-top: 10px;">
+                                                    <input class="btn-outline-dark" type="submit" name="filter" value="Filter">
                                                 </div>
                                             </div>
-                                        </div>
-                                    </form>
-                                </div>
-                            </div>
+                                        </form>
+
                         </aside>
                         <aside class="wedget__categories poroduct--tag">
-                            <h3 class="wedget__title">Product Tags</h3>
+                            <h3 class="wedget__title">Collection Tags</h3>
                             <ul>
-                                <li><a href="#">Biography</a></li>
-                                <li><a href="#">Business</a></li>
-                                <li><a href="#">Cookbooks</a></li>
-                                <li><a href="#">Health & Fitness</a></li>
-                                <li><a href="#">History</a></li>
-                                <li><a href="#">Mystery</a></li>
-                                <li><a href="#">Inspiration</a></li>
-                                <li><a href="#">Religion</a></li>
-                                <li><a href="#">Fiction</a></li>
-                                <li><a href="#">Fantasy</a></li>
-                                <li><a href="#">Music</a></li>
-                                <li><a href="#">Toys</a></li>
-                                <li><a href="#">Hoodies</a></li>
+                                <?php
+                                $query ="select * from collection";
+                                $result = mysqli_query($conn,$query);
+                                while ($coll = mysqli_fetch_assoc($result)){
+                                    if ($coll['coll_id'] != 1) {
+                                        echo "<li><a href=\"?coll_id={$coll['coll_id']}\">{$coll['coll_name']}</a></li>";
+                                    }
+                                }
+                                ?>
                             </ul>
                         </aside>
                         <aside class="wedget__categories sidebar--banner">
@@ -107,17 +103,6 @@ SELECT category.cat_id, `cat_name`, `cat_img`,count(product.cat_id) FROM `catego
                                     <a class="nav-item nav-link " data-toggle="tab" href="#nav-list" role="tab"><i class="fa fa-list"></i></a>
                                 </div>
                                 <p>Showing 1–12 of 40 results</p>
-                                <div class="orderby__wrapper">
-                                    <span>Sort By</span>
-                                    <select class="shot__byselect">
-                                        <option>Default sorting</option>
-                                        <option>HeadPhone</option>
-                                        <option>Furniture</option>
-                                        <option>Jewellery</option>
-                                        <option>Handmade</option>
-                                        <option>Kids</option>
-                                    </select>
-                                </div>
                             </div>
                         </div>
                     </div>
@@ -125,49 +110,11 @@ SELECT category.cat_id, `cat_name`, `cat_img`,count(product.cat_id) FROM `catego
                         <div class="shop-grid tab-pane fade show active" id="nav-grid" role="tabpanel">
                             <div class="row">
                                 <?php
-                                if (!isset($_GET['catId'])) {
-                                    $query = " select * from product inner join image on product.pro_id=image.pro_id inner join category on product.cat_id=category.cat_id";
-                                    $result = mysqli_query($conn,$query);
-                                    while ($pro = mysqli_fetch_assoc($result)) {
-                                        echo "<div class=\"product product__style--3 col-lg-4 col-md-4 col-sm-6 col-12\">
-                                    <div class=\"product__thumb\">
-                                        <a class=\"first__img\" href=\"single-product.php?proId={$pro['pro_id']}\"><img width='270' height='340' src=\"admin/uploads/product/{$pro['cat_name']}/{$pro['img_one']}\" alt=\"product image\"></a>
-                                        <a class=\"second__img animation1\" href=\"single-product.php?proId={$pro['pro_id']}\"><img width='270' height='340' src=\"admin/uploads/product/{$pro['cat_name']}/{$pro['img_two']}\" alt=\"product image\"></a>
-                                        <div class=\"hot__box\">
-                                            <span class=\"hot-label\">BEST SALLER</span>
-                                        </div>
-                                    </div>
-                                    <div class=\"product__content content--center\">
-                                        <h4><a href=\"single-product.html\">{$pro['pro_name']}</a></h4>
-                                        <ul class=\"prize d-flex\">
-                                            <li>$35.00</li>
-                                            <li class=\"old_prize\">$35.00</li>
-                                        </ul>
-                                        <div class=\"action\">
-                                            <div class=\"actions_inner\">
-                                                <ul class=\"add_to_links\">
-                                                    <li><a class=\"cart\" href=\"cart.html\"><i class=\"bi bi-shopping-bag4\"></i></a></li>
-                                                    <li><a class=\"wishlist\" href=\"wishlist.html\"><i class=\"bi bi-shopping-cart-full\"></i></a></li>
-                                                    <li><a class=\"compare\" href=\"#\"><i class=\"bi bi-heart-beat\"></i></a></li>
-                                                    <li><a data-toggle=\"modal\" title=\"Quick View\" class=\"quickview modal-view detail-link\" href=\"#productmodal\"><i class=\"bi bi-search\"></i></a></li>
-                                                </ul>
-                                            </div>
-                                        </div>
-                                        <div class=\"product__hover--content\">
-                                            <ul class=\"rating d-flex\">
-                                                <li class=\"on\"><i class=\"fa fa-star-o\"></i></li>
-                                                <li class=\"on\"><i class=\"fa fa-star-o\"></i></li>
-                                                <li class=\"on\"><i class=\"fa fa-star-o\"></i></li>
-                                                <li><i class=\"fa fa-star-o\"></i></li>
-                                                <li><i class=\"fa fa-star-o\"></i></li>
-                                            </ul>
-                                        </div>
-                                    </div>
-                                </div>
-                                ";
-                                    }
-                                }else {
+                                if (isset($_GET['catId'])) {
                                     $query = " select * from product inner join image on product.pro_id=image.pro_id inner join category on product.cat_id=category.cat_id where product.cat_id= {$_GET['catId']}";
+                                    if (isset($_POST['filter'])){
+                                        $query.=filter($_POST['amount']);
+                                    }
                                     $result = mysqli_query($conn, $query);
                                     while ($pro = mysqli_fetch_assoc($result)) {
                                         echo "<div class=\"product product__style--3 col-lg-4 col-md-4 col-sm-6 col-12\">
@@ -179,35 +126,143 @@ SELECT category.cat_id, `cat_name`, `cat_img`,count(product.cat_id) FROM `catego
                                         </div>
                                     </div>
                                     <div class=\"product__content content--center\">
-                                        <h4><a href=\"single-product.html\">{$pro['pro_name']}</a></h4>
+                                        <h4><a href=\"single-product.php?proId={$pro['pro_id']}\">{$pro['pro_name']}</a></h4>
                                         <ul class=\"prize d-flex\">
-                                            <li>$35.00</li>
-                                            <li class=\"old_prize\">$35.00</li>
+                                            <li>$ {$pro['pro_price']}</li>
                                         </ul>
                                         <div class=\"action\">
                                             <div class=\"actions_inner\">
                                                 <ul class=\"add_to_links\">
-                                                    <li><a class=\"cart\" href=\"cart.html\"><i class=\"bi bi-shopping-bag4\"></i></a></li>
-                                                    <li><a class=\"wishlist\" href=\"wishlist.html\"><i class=\"bi bi-shopping-cart-full\"></i></a></li>
-                                                    <li><a class=\"compare\" href=\"#\"><i class=\"bi bi-heart-beat\"></i></a></li>
-                                                    <li><a data-toggle=\"modal\" title=\"Quick View\" class=\"quickview modal-view detail-link\" href=\"#productmodal\"><i class=\"bi bi-search\"></i></a></li>
+                                                    <li><a class=\"cart\" href=\"single-product.php?proId={$pro['pro_id']}\"><i class=\"bi bi-shopping-bag4\"></i></a></li>
+                                                    <li><a class=\"wishlist\" pro=\"{$pro['pro_id']}\" name=\"wishlist\"><i class=\"bi bi-heart-beat\"></i></a></li>
+                                                    <li><a data-toggle=\"modal\" title=\"Quick View\" pro-data=\"{$pro['pro_id']}\" class=\"quickview modal-view detail-link\" href=\"#productmodal\"><i class=\"bi bi-search\"></i></a></li>
                                                 </ul>
                                             </div>
                                         </div>
                                         <div class=\"product__hover--content\">
-                                            <ul class=\"rating d-flex\">
-                                                <li class=\"on\"><i class=\"fa fa-star-o\"></i></li>
-                                                <li class=\"on\"><i class=\"fa fa-star-o\"></i></li>
-                                                <li class=\"on\"><i class=\"fa fa-star-o\"></i></li>
-                                                <li><i class=\"fa fa-star-o\"></i></li>
-                                                <li><i class=\"fa fa-star-o\"></i></li>
-                                            </ul>
+                                    <ul class=\"rating d-flex\">
+                                        <li style=\"color: #e59285\">$ {$pro['pro_price']}</li>
+                                    </ul>
+                                </div>
+                                    </div>
+                                </div>
+                                ";
+                                    }
+                                } elseif (isset($_GET['coll_id'])){
+                                    $query = "select * from product inner join image on product.pro_id=image.pro_id inner join collection on product.coll_id=collection.coll_id inner join category on product.cat_id=category.cat_id where product.coll_id={$_GET['coll_id']}";
+                                    if (isset($_POST['filter'])){
+                                        $query.=filter($_POST['amount']);
+                                    }
+                                    $result = mysqli_query($conn,$query);
+                                    while ($pro = mysqli_fetch_assoc($result)) {
+                                        echo "<div class=\"product product__style--3 col-lg-4 col-md-4 col-sm-6 col-12\">
+                                    <div class=\"product__thumb\">
+                                        <a class=\"first__img\" href=\"single-product.php?proId={$pro['pro_id']}\"><img width='270' height='340' src=\"admin/uploads/product/{$pro['cat_name']}/{$pro['img_one']}\" alt=\"product image\"></a>
+                                        <a class=\"second__img animation1\" href=\"single-product.php?proId={$pro['pro_id']}\"><img width='270' height='340' src=\"admin/uploads/product/{$pro['cat_name']}/{$pro['img_two']}\" alt=\"product image\"></a>
+                                        <div class=\"hot__box\">
+                                            <span class=\"hot-label\">BEST SALLER</span>
                                         </div>
+                                    </div>
+                                    <div class=\"product__content content--center\">
+                                        <h4><a href=\"single-product.php?proId={$pro['pro_id']}\">{$pro['pro_name']}</a></h4>
+                                        <ul class=\"prize d-flex\">
+                                            <li>$ {$pro['pro_price']}</li>
+                                        </ul>
+                                        <div class=\"action\">
+                                            <div class=\"actions_inner\">
+                                                <ul class=\"add_to_links\">
+                                                    <li><a class=\"cart\" href=\"single-product.php?proId={$pro['pro_id']}\"><i class=\"bi bi-shopping-bag4\"></i></a></li>
+                                                    <li><a class=\"wishlist\" pro=\"{$pro['pro_id']}\" name=\"wishlist\"><i class=\"bi bi-heart-beat\"></i></a></li>
+                                                    <li><a data-toggle=\"modal\" title=\"Quick View\" pro-data=\"{$pro['pro_id']}\" class=\"quickview modal-view detail-link\" href=\"#productmodal\"><i class=\"bi bi-search\"></i></a></li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                        <div class=\"product__hover--content\">
+                                    <ul class=\"rating d-flex\">
+                                        <li style=\"color: #e59285\">$ {$pro['pro_price']}</li>
+                                    </ul>
+                                </div>
+                                    </div>
+                                </div>
+                                "; }
+                                }
+                                elseif (isset($_GET['authorId'])){
+                                    $query = "select * from product inner join image on product.pro_id=image.pro_id inner join category on product.cat_id=category.cat_id inner join author on product.author_id=author.author_id where product.author_id={$_GET['authorId']}";
+                                    $result = mysqli_query($conn,$query);
+                                    while ($pro = mysqli_fetch_assoc($result)){
+                                        echo "<div class=\"product product__style--3 col-lg-4 col-md-4 col-sm-6 col-12\">
+                                    <div class=\"product__thumb\">
+                                        <a class=\"first__img\" href=\"single-product.php?proId={$pro['pro_id']}\"><img width='270' height='340' src=\"admin/uploads/product/{$pro['cat_name']}/{$pro['img_one']}\" alt=\"product image\"></a>
+                                        <a class=\"second__img animation1\" href=\"single-product.php?proId={$pro['pro_id']}\"><img width='270' height='340' src=\"admin/uploads/product/{$pro['cat_name']}/{$pro['img_two']}\" alt=\"product image\"></a>
+                                        <div class=\"hot__box\">
+                                            <span class=\"hot-label\">BEST SALLER</span>
+                                        </div>
+                                    </div>
+                                    <div class=\"product__content content--center\">
+                                        <h4><a href=\"single-product.php?proId={$pro['pro_id']}\">{$pro['pro_name']}</a></h4>
+                                        <ul class=\"prize d-flex\">
+                                            <li>$ {$pro['pro_price']}</li>
+                                        </ul>
+                                        <div class=\"action\">
+                                            <div class=\"actions_inner\">
+                                                <ul class=\"add_to_links\">
+                                                    <li><a class=\"cart\" href=\"single-product.php?proId={$pro['pro_id']}\"><i class=\"bi bi-shopping-bag4\"></i></a></li>
+                                                    <li><a class=\"wishlist\" pro=\"{$pro['pro_id']}\" name=\"wishlist\"><i class=\"bi bi-heart-beat\"></i></a></li>
+                                                    <li><a data-toggle=\"modal\" title=\"Quick View\" pro-data=\"{$pro['pro_id']}\" class=\"quickview modal-view detail-link\" href=\"#productmodal\"><i class=\"bi bi-search\"></i></a></li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                        <div class=\"product__hover--content\">
+                                    <ul class=\"rating d-flex\">
+                                        <li style=\"color: #e59285\">$ {$pro['pro_price']}</li>
+                                    </ul>
+                                </div>
                                     </div>
                                 </div>
                                 ";
                                     }
                                 }
+                                else {
+
+                                    $query = " select * from product inner join image on product.pro_id=image.pro_id inner join category on product.cat_id=category.cat_id";
+                                    if (isset($_POST['filter'])){
+                                        $query.=filter($_POST['amount']);
+                                    }
+                                    $result = mysqli_query($conn,$query);
+                                    while ($pro = mysqli_fetch_assoc($result)) {
+                                        echo "<div class=\"product product__style--3 col-lg-4 col-md-4 col-sm-6 col-12\">
+                                    <div class=\"product__thumb\">
+                                        <a class=\"first__img\" href=\"single-product.php?proId={$pro['pro_id']}\"><img width='270' height='340' src=\"admin/uploads/product/{$pro['cat_name']}/{$pro['img_one']}\" alt=\"product image\"></a>
+                                        <a class=\"second__img animation1\" href=\"single-product.php?proId={$pro['pro_id']}\"><img width='270' height='340' src=\"admin/uploads/product/{$pro['cat_name']}/{$pro['img_two']}\" alt=\"product image\"></a>
+                                        <div class=\"hot__box\">
+                                            <span class=\"hot-label\">BEST SALLER</span>
+                                        </div>
+                                    </div>
+                                    <div class=\"product__content content--center\">
+                                        <h4><a href=\"single-product.php?proId={$pro['pro_id']}\">{$pro['pro_name']}</a></h4>
+                                        <ul class=\"prize d-flex\">
+                                            <li>$ {$pro['pro_price']}</li>
+                                        </ul>
+                                        <div class=\"action\">
+                                            <div class=\"actions_inner\">
+                                                <ul class=\"add_to_links\">
+                                                    <li><a class=\"cart\" href=\"single-product.php?proId={$pro['pro_id']}\"><i class=\"bi bi-shopping-bag4\"></i></a></li>
+                                                    <li><a class=\"wishlist\" pro=\"{$pro['pro_id']}\" name=\"wishlist\"><i class=\"bi bi-heart-beat\"></i></a></li>
+                                                    <li><a data-toggle=\"modal\" title=\"Quick View\" pro-data=\"{$pro['pro_id']}\" class=\"quickview modal-view detail-link\" href=\"#productmodal\"><i class=\"bi bi-search\"></i></a></li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                        <div class=\"product__hover--content\">
+                                    <ul class=\"rating d-flex\">
+                                        <li style=\"color: #e59285\">$ {$pro['pro_price']}</li>
+                                    </ul>
+                                </div>
+                                    </div>
+                                </div>
+                                ";
+                                    }
+                                }
+
                                 ?>
                                 <!-- Start Single Product -->
                                 <!-- End Single Product -->
@@ -227,14 +282,17 @@ SELECT category.cat_id, `cat_name`, `cat_img`,count(product.cat_id) FROM `catego
                             <div class="list__view__wrapper">
                                 <!-- Start Single Product -->
                                 <?php
-                                if (!isset($_GET['catId'])) {
-                                $query = " select * from product inner join image on product.pro_id=image.pro_id inner join category on product.cat_id=category.cat_id";
-                                $result = mysqli_query($conn,$query);
-                                while ($pro = mysqli_fetch_assoc($result)) {
-                                echo "<div class=\"list__view mt--40\">
+                                if (isset($_GET['catId'])) {
+                                    $query = " select * from product inner join image on product.pro_id=image.pro_id inner join category on product.cat_id=category.cat_id where product.cat_id= {$_GET['catId']}";
+                                    if (isset($_POST['filter'])){
+                                        $query.=filter($_POST['amount']);
+                                    }
+                                    $result = mysqli_query($conn, $query);
+                                    while ($pro = mysqli_fetch_assoc($result)) {
+                                        echo "<div class=\"list__view mt--40\">
 	        							<div class=\"thumb\">
-	        								<a class=\"first__img\" href=\"single-product.html\"><img width='270' height='340' src=\"admin/uploads/product/{$pro['cat_name']}/{$pro['img_one']}\" alt=\"product images\"></a>
-	        								<a class=\"second__img animation1\" href=\"single-product.html\"><img width='450' height='565' src=\"admin/uploads/product/{$pro['cat_name']}/{$pro['img_one']}\" alt=\"product images\"></a>
+	        								<a class=\"first__img\" href=\"single-product.php?proId={$pro['pro_id']}\"><img width='270' height='340' src=\"admin/uploads/product/{$pro['cat_name']}/{$pro['img_one']}\" alt=\"product images\"></a>
+	        								<a class=\"second__img animation1\" href=\"single-product.php?proId={$pro['pro_id']}\"><img width='270' height='340' src=\"admin/uploads/product/{$pro['cat_name']}/{$pro['img_two']}\" alt=\"product images\"></a>
 	        							</div>
 	        							<div class=\"content\">
 	        								<h2><a href=\"single-product.php?proId={$pro['pro_id']}\">{$pro['pro_name']}</a></h2>
@@ -251,24 +309,30 @@ SELECT category.cat_id, `cat_name`, `cat_img`,count(product.cat_id) FROM `catego
 	        								</ul>
 	        								<p>{$pro['pro_desc']}</p>
 	        								<ul class=\"cart__action d-flex\">
-	        									<li class=\"cart\"><a href=\"cart.html\">Add to cart</a></li>
-	        									<li class=\"wishlist\"><a href=\"cart.html\"></a></li>
+	        									<li class=\"cart\"><a href=\"single-product.php?proId={$pro['pro_id']}\">Add to cart</a></li>
+	        									<li><a class=\"wishlist\" pro=\"{$pro['pro_id']}\" name=\"wishlist\"><i class=\"bi bi-heart-beat\"></i></a></li>
+	        								<li><a data-toggle=\"modal\" title=\"Quick View\" pro-data=\"{$pro['pro_id']}\" class=\"quickview modal-view detail-link\" href=\"#productmodal\"><i class=\"bi bi-search\"></i></a></li>
 	        								</ul>
 
 	        							</div>
 	        						</div>";
+                                    }
+
                                 }
-                                }else {
-                                    $query = " select * from product inner join image on product.pro_id=image.pro_id inner join category on product.cat_id=category.cat_id where product.cat_id= {$_GET['catId']}";
-                                    $result = mysqli_query($conn, $query);
+                                elseif (isset($_GET['coll_id'])){
+                                    $query = " select * from product inner join image on product.pro_id=image.pro_id inner join collection on product.coll_id=collection.coll_id inner join category on product.cat_id=category.cat_id where product.coll_id={$_GET['coll_id']}";
+                                    if (isset($_POST['filter'])){
+                                        $query.=filter($_POST['amount']);
+                                    }
+                                    $result = mysqli_query($conn,$query);
                                     while ($pro = mysqli_fetch_assoc($result)) {
                                         echo "<div class=\"list__view mt--40\">
 	        							<div class=\"thumb\">
-	        								<a class=\"first__img\" href=\"single-product.html\"><img width='270' height='340' src=\"admin/uploads/product/{$pro['cat_name']}/{$pro['img_one']}\" alt=\"product images\"></a>
-	        								<a class=\"second__img animation1\" href=\"single-product.html\"><img width='270' height='340' src=\"admin/uploads/product/{$pro['cat_name']}/{$pro['img_two']}\" alt=\"product images\"></a>
+	        								<a class=\"first__img\" href=\"single-product.php?proId={$pro['pro_id']}\"><img width='270' height='340' src=\"admin/uploads/product/{$pro['cat_name']}/{$pro['img_one']}\" alt=\"product images\"></a>
+	        								<a class=\"second__img animation1\" href=\"single-product.php?proId={$pro['pro_id']}\"><img width='450' height='565' src=\"admin/uploads/product/{$pro['cat_name']}/{$pro['img_one']}\" alt=\"product images\"></a>
 	        							</div>
 	        							<div class=\"content\">
-	        								<h2><a href=\"single-product.html\">{$pro['pro_name']}</a></h2>
+	        								<h2><a href=\"single-product.php?proId={$pro['pro_id']}\">{$pro['pro_name']}</a></h2>
 	        								<ul class=\"rating d-flex\">
 	        									<li class=\"on\"><i class=\"fa fa-star-o\"></i></li>
 	        									<li class=\"on\"><i class=\"fa fa-star-o\"></i></li>
@@ -282,13 +346,51 @@ SELECT category.cat_id, `cat_name`, `cat_img`,count(product.cat_id) FROM `catego
 	        								</ul>
 	        								<p>{$pro['pro_desc']}</p>
 	        								<ul class=\"cart__action d-flex\">
-	        									<li class=\"cart\"><a href=\"cart.html\">Add to cart</a></li>
-	        									<li class=\"wishlist\"><a href=\"cart.html\"></a></li>
+	        									<li class=\"cart\"><a href=\"single-product.php?proId={$pro['pro_id']}\">Add to cart</a></li>
+	        									<li><a class=\"wishlist\" pro=\"{$pro['pro_id']}\" name=\"wishlist\"><i class=\"bi bi-heart-beat\"></i></a></li>
+	        									<li><a data-toggle=\"modal\" title=\"Quick View\" pro-data=\"{$pro['pro_id']}\" class=\"quickview modal-view detail-link\" href=\"#productmodal\"><i class=\"bi bi-search\"></i></a></li>
 	        								</ul>
 
 	        							</div>
 	        						</div>";
-                                    }} ?>
+                                    }
+                                }
+                                else {
+                                    $query = " select * from product inner join image on product.pro_id=image.pro_id inner join category on product.cat_id=category.cat_id";
+                                    if (isset($_POST['filter'])){
+                                        $query.=filter($_POST['amount']);
+                                    }
+                                    $result = mysqli_query($conn,$query);
+                                    while ($pro = mysqli_fetch_assoc($result)) {
+                                        echo "<div class=\"list__view mt--40\">
+	        							<div class=\"thumb\">
+	        								<a class=\"first__img\" href=\"single-product.php?proId={$pro['pro_id']}\"><img width='270' height='340' src=\"admin/uploads/product/{$pro['cat_name']}/{$pro['img_one']}\" alt=\"product images\"></a>
+	        								<a class=\"second__img animation1\" href=\"single-product.php?proId={$pro['pro_id']}\"><img width='450' height='565' src=\"admin/uploads/product/{$pro['cat_name']}/{$pro['img_one']}\" alt=\"product images\"></a>
+	        							</div>
+	        							<div class=\"content\">
+	        								<h2><a href=\"single-product.php?proId={$pro['pro_id']}\">{$pro['pro_name']}</a></h2>
+	        								<ul class=\"rating d-flex\">
+	        									<li class=\"on\"><i class=\"fa fa-star-o\"></i></li>
+	        									<li class=\"on\"><i class=\"fa fa-star-o\"></i></li>
+	        									<li class=\"on\"><i class=\"fa fa-star-o\"></i></li>
+	        									<li class=\"on\"><i class=\"fa fa-star-o\"></i></li>
+	        									<li><i class=\"fa fa-star-o\"></i></li>
+	        									<li><i class=\"fa fa-star-o\"></i></li>
+	        								</ul>
+	        								<ul class=\"prize__box\">
+	        									<li>$ {$pro['pro_price']}</li>
+	        								</ul>
+	        								<p>{$pro['pro_desc']}</p>
+	        								<ul class=\"cart__action d-flex\">
+	        									<li class=\"cart\"><a href=\"single-product.php?proId={$pro['pro_id']}\">Add to cart</a></li>
+	        									<li><a class=\"wishlist\" pro=\"{$pro['pro_id']}\" name=\"wishlist\"><i class=\"bi bi-heart-beat\"></i></a></li>
+	        									<li><a data-toggle=\"modal\" title=\"Quick View\" pro-data=\"{$pro['pro_id']}\" class=\"quickview modal-view detail-link\" href=\"#productmodal\"><i class=\"bi bi-search\"></i></a></li>
+	        								</ul>
+
+	        							</div>
+	        						</div>";
+                                    }
+                                    } ?>
                                 <!-- End Single Product -->
                                 <!-- End Single Product -->
                             </div>
@@ -299,4 +401,5 @@ SELECT category.cat_id, `cat_name`, `cat_img`,count(product.cat_id) FROM `catego
         </div>
     </div>
     <!-- End Shop Page -->
-    <?php include 'footer.php';
+
+    <?php include 'footer.php';?>

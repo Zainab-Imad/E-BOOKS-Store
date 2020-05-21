@@ -54,7 +54,7 @@ $catID  = $pro['cat_id'];
                             <div class="col-lg-6 col-12">
                                 <div class="product__info__main">
                                     <h1 style="font-size: 40px;"><?php echo $pro['pro_name']; ?></h1>
-                                    <h3 style="font-size: 30px;">Author: <?php echo $pro['author_name']; ?></h3>
+                                    <h3 style="font-size: 30px;">BY: <?php echo $pro['author_name']; ?></h3>
                                     <div class="product-reviews-summary d-flex">
                                         <ul class="rating-summary d-flex">
                                             <li><i class="zmdi zmdi-star-outline"></i></li>
@@ -76,8 +76,7 @@ $catID  = $pro['cat_id'];
                                             <button class="tocart" type="submit" name="addToCart" title="Add to Cart">Add to Cart</button>
                                         </div>
                                         <div class="product-addto-links clearfix">
-                                            <a class="wishlist" href="#"></a>
-                                            <a class="compare" href="#"></a>
+                                            <a class="wishlist" pro="<?php echo $pro['pro_id'] ?>" name="wishlist"><i class="bi bi-heart-beat"></i></a>
                                         </div>
                                     </div>
                                     <div class="product_meta">
@@ -242,6 +241,7 @@ $catID  = $pro['cat_id'];
                             <h2 class="title__be--2">Related Products</h2>
                         </div>
                         <div class="row mt--60">
+                            <div class="productcategory__slide--2 arrows_style owl-carousel owl-theme">
                                 <!-- Start Single Product -->
                                 <?php
                                 $query = "select * from product inner join image on product.pro_id=image.pro_id inner join category on product.cat_id= category.cat_id where category.cat_id=$catID";
@@ -249,37 +249,27 @@ $catID  = $pro['cat_id'];
                                 while ($pro = mysqli_fetch_assoc($result)){
                                     echo "<div class=\"product product__style--3 col-lg-4 col-md-4 col-sm-6 col-12\">
                                     <div class=\"product__thumb\">
-                                        <a class=\"first__img\" href=\"single-product.html\"><img src=\"admin/uploads/product/{$pro['cat_name']}/{$pro['img_one']}\" alt=\"product image\"></a>
-                                        <a class=\"second__img animation1\" href=\"single-product.html\"><img src=\"admin/uploads/product/{$pro['cat_name']}/{$pro['img_one']}\" alt=\"product image\"></a>
+                                        <a class=\"first__img\" href=\"single-product.php?proId={$pro['pro_id']}\"><img width='270px' height='340px' src=\"admin/uploads/product/{$pro['cat_name']}/{$pro['img_one']}\" alt=\"product image\"></a>
+                                        <a class=\"second__img animation1\" href=\"single-product.php?proId={$pro['pro_id']}\"><img width='270px' height='340px' src=\"admin/uploads/product/{$pro['cat_name']}/{$pro['img_one']}\" alt=\"product image\"></a>
                                         <div class=\"hot__box color--2\">
-                                            <span class=\"hot-label\">HOT</span>
+                                            <span class=\"hot-label\">Related</span>
                                         </div>
                                     </div>
                                     <div class=\"product__content content--center\">
-                                        <h4><a href=\"single-product.html\">The Remainng</a></h4>
+                                        <h4><a href=\"single-product.php?proId={$pro['pro_id']}\">The Remainng</a></h4>
                                         <ul class=\"prize d-flex\">
-                                            <li>$35.00</li>
-                                            <li class=\"old_prize\">$35.00</li>
+                                            <li>$ {$pro['pro_price']}</li>
                                         </ul>
                                         <div class=\"action\">
                                             <div class=\"actions_inner\">
                                                 <ul class=\"add_to_links\">
-                                                    <li><a class=\"cart\" href=\"cart.html\"><i class=\"bi bi-shopping-bag4\"></i></a></li>
-                                                    <li><a class=\"wishlist\" href=\"wishlist.html\"><i class=\"bi bi-shopping-cart-full\"></i></a></li>
-                                                    <li><a class=\"compare\" href=\"#\"><i class=\"bi bi-heart-beat\"></i></a></li>
-                                                    <li><a data-toggle=\"modal\" title=\"Quick View\" class=\"quickview modal-view detail-link\" href=\"#productmodal\"><i class=\"bi bi-search\"></i></a></li>
+                                                    <li><a class=\"cart\" href=\"single-product.php?proId={$pro['pro_id']}\"><i class=\"bi bi-shopping-bag4\"></i></a></li>
+                                                    <li><a class=\"wishlist\" pro=\"{$pro['pro_id']}\" name=\"wishlist\"><i class=\"bi bi-heart-beat\"></i></a></li>
+                                                    <li><a data-toggle=\"modal\" title=\"Quick View\" pro-data=\"{$pro['pro_id']}\" class=\"quickview modal-view detail-link\" href=\"#productmodal\"><i class=\"bi bi-search\"></i></a></li>
                                                 </ul>
                                             </div>
                                         </div>
-                                        <div class=\"product__hover--content\">
-                                            <ul class=\"rating d-flex\">
-                                                <li class=\"on\"><i class=\"fa fa-star-o\"></i></li>
-                                                <li class=\"on\"><i class=\"fa fa-star-o\"></i></li>
-                                                <li class=\"on\"><i class=\"fa fa-star-o\"></i></li>
-                                                <li><i class=\"fa fa-star-o\"></i></li>
-                                                <li><i class=\"fa fa-star-o\"></i></li>
-                                            </ul>
-                                        </div>
+                                   
                                     </div>
                                 </div>";
                                 }
@@ -305,6 +295,7 @@ $catID  = $pro['cat_id'];
                     </div>
 
                 </div>
+                </div>
                 <div class="col-lg-3 col-12 md-mt-40 sm-mt-40">
                     <div class="shop__sidebar">
                         <aside class="wedget__categories poroduct--cat">
@@ -315,55 +306,23 @@ $catID  = $pro['cat_id'];
 SELECT category.cat_id, `cat_name`, `cat_img`,count(product.cat_id) FROM `category` inner join product on product.cat_id=category.cat_id GROUP BY product.cat_id";
                                 $result = mysqli_query($conn,$query);
                                 while ( $cat = mysqli_fetch_assoc($result) ){
-                                    echo "<li><a href='#'>{$cat['cat_name']}<span>{$cat['count(product.cat_id)']}</span></a></li>";
+                                    echo "<li><a href='shop-grid.php?catId={$cat['cat_id']}'>{$cat['cat_name']}<span>{$cat['count(product.cat_id)']}</span></a></li>";
                                 }
                                 ?>
-                            </ul>
-                        </aside>
-                        <aside class="wedget__categories pro--range">
-                            <h3 class="wedget__title">Filter by price</h3>
-                            <div class="content-shopby">
-                                <div class="price_filter s-filter clear">
-                                    <form action="#" method="GET">
-                                        <div id="slider-range"></div>
-                                        <div class="slider__range--output">
-                                            <div class="price__output--wrap">
-                                                <div class="price--output">
-                                                    <span>Price :</span><input type="text" id="amount" readonly="">
-                                                </div>
-                                                <div class="price--filter">
-                                                    <a href="#">Filter</a>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </form>
-                                </div>
-                            </div>
-                        </aside>
-                        <aside class="wedget__categories poroduct--compare">
-                            <h3 class="wedget__title">Compare</h3>
-                            <ul>
-                                <li><a href="#">x</a><a href="#">Condimentum posuere</a></li>
-                                <li><a href="#">x</a><a href="#">Condimentum posuere</a></li>
-                                <li><a href="#">x</a><a href="#">Dignissim venenatis</a></li>
                             </ul>
                         </aside>
                         <aside class="wedget__categories poroduct--tag">
                             <h3 class="wedget__title">Product Tags</h3>
                             <ul>
-                                <li><a href="#">Biography</a></li>
-                                <li><a href="#">Business</a></li>
-                                <li><a href="#">Cookbooks</a></li>
-                                <li><a href="#">Health & Fitness</a></li>
-                                <li><a href="#">History</a></li>
-                                <li><a href="#">Mystery</a></li>
-                                <li><a href="#">Inspiration</a></li>
-                                <li><a href="#">Religion</a></li>
-                                <li><a href="#">Fiction</a></li>
-                                <li><a href="#">Fantasy</a></li>
-                                <li><a href="#">Music</a></li>
-                                <li><a href="#">Toys</a></li>
-                                <li><a href="#">Hoodies</a></li>
+                                <?php
+                                $query ="select * from collection";
+                                $result = mysqli_query($conn,$query);
+                                while ($coll = mysqli_fetch_assoc($result)){
+                                    if ($coll['coll_id'] != 1) {
+                                        echo "<li><a href=\"shop-grid.php?coll_id={$coll['coll_id']}\">{$coll['coll_name']}</a></li>";
+                                    }
+                                }
+                                ?>
                             </ul>
                         </aside>
                         <aside class="wedget__categories sidebar--banner">
