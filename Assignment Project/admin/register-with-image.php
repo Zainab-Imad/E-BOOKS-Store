@@ -1,7 +1,21 @@
+<?php
+session_start();
+require 'includes/connection.php';
+if(isset($_POST['submit'])){
+    $name  = $_POST['name'];
+    $email = $_POST['email'];
+    $pass  = $_POST['password'];
+    $query = "select * from admin where admin_name='$name' and admin_email='$email'";
+    $result = mysqli_query($conn, $query);
+    $admin = mysqli_fetch_assoc($result);
+
+}
+
+?>
 <!doctype html>
 <html lang="zxx">
     
-<!-- Mirrored from templates.envytheme.com/fiva-admin-html/forgot-password-with-image.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 30 Jan 2020 16:53:47 GMT -->
+<!-- Mirrored from templates.envytheme.com/fiva-admin-html/register-with-image.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 30 Jan 2020 16:53:46 GMT -->
 <head>
         <!-- Required meta tags -->
         <meta charset="utf-8">
@@ -21,39 +35,51 @@
 
     <body>
 
-        <!-- Start Forgot Password Area -->
-        <div class="forgot-password-area bg-image">
+        <!-- Start Register Area -->
+        <div class="register-area bg-image">
             <div class="d-table">
                 <div class="d-table-cell">
-                    <div class="forgot-password-content">
-                        <div class="row m-0">
-                            <div class="col-lg-5 p-0">
-                                <div class="image">
-                                    <img src="assets/img/computer.png" alt="image">
-                                </div>
-                            </div>
-
-                            <div class="col-lg-7 p-0">
-                                <div class="forgot-password-form">
-                                    <h2>Recover your password</h2>
-                                    <p class="mb-0">Please provide the email address that you used when you signed up for your Fiva account.</p>
-
-                                    <form>
-                                        <div class="form-group">
-                                            <input type="email" class="form-control" name="name" placeholder="Email address">
-                                            <span class="label-title"><i class='bx bx-envelope'></i></span>
-                                        </div>
-
-                                        <button type="submit" class="forgot-password-btn">Send Password</button>
-                                    </form>
-                                </div>
-                            </div>
+                    <div class="register-form">
+                        <div class="logo">
+                            <a href="dashboard-analytics.php"><img src="assets/img/logo.png" alt="image"></a>
                         </div>
+
+                        <h2>Register</h2>
+
+                        <form method="post" action="">
+                            <div class="form-group">
+                                <input type="text" class="form-control" name="name" placeholder="Name">
+                                <span class="label-title"><i class='bx bx-user'></i></span>
+                            </div>
+
+                            <div class="form-group">
+                                <input type="text" class="form-control" name="email" placeholder="Email">
+                                <span class="label-title"><i class='bx bx-envelope'></i></span>
+                            </div>
+
+                            <div class="form-group">
+                                <input type="password" class="form-control" name="password" placeholder="Password">
+                                <span class="label-title"><i class='bx bx-lock'></i></span>
+                            </div>
+
+                            <div class="form-group">
+                                <div class="terms-conditions">
+                                    <label class="checkbox-box">I accept <a href="#">Terms and Conditions</a>
+                                        <input type="checkbox">
+                                        <span class="checkmark"></span>
+                                    </label>
+                                </div>
+                            </div>
+
+                            <button type="submit" name="submit" class="register-btn">Sign Up</button>
+
+                            <p class="mb-0">Already have account? <a href="login.php">Sign In</a></p>
+                        </form>
                     </div>
                 </div>
             </div>
         </div>
-        <!-- End Forgot Password Area -->
+        <!-- End Register Area -->
         
 
         <!-- Vendors Min JS -->
@@ -95,5 +121,5 @@
         <script src="assets/js/custom.js"></script>
     </body>
 
-<!-- Mirrored from templates.envytheme.com/fiva-admin-html/forgot-password-with-image.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 30 Jan 2020 16:53:47 GMT -->
+<!-- Mirrored from templates.envytheme.com/fiva-admin-html/register-with-image.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 30 Jan 2020 16:53:46 GMT -->
 </html>

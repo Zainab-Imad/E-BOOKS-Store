@@ -38,14 +38,6 @@ include 'includes/header.php'; ?>
             <label>Category Name</label>
             <input type="text" name="cat-name" class="form-control" required>
         </div>
-        <div class="form-group">
-            <label>Category Image</label>
-            <div class="input-group mb-3">
-                <div class="input-group-prepend">
-                    <span class="input-group-text">Upload</span>
-                </div>
-            </div>
-        </div>
         <button type="submit" name="submit" class="btn btn-lg btn-primary">Save</button>
     </form>
 </div>

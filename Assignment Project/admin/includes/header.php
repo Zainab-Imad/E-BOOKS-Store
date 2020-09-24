@@ -3,6 +3,7 @@ session_start();
 if (!isset($_SESSION['admin_id'])){
     header("location:login.php");
 }
+
 ?>
 <!doctype html>
 <head>
@@ -1123,7 +1124,7 @@ if (!isset($_SESSION['admin_id'])){
                         <li class="nav-item dropdown profile-nav-item">
                             <a href="#" class="nav-link dropdown-toggle" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 <div class="menu-profile">
-                                    <span class="name">Hi! Andro</span>
+                                    <span class="name"><?php echo $_SESSION['admin_name']?></span>
                                     <img src="assets/img/user1.jpg" class="rounded-circle" alt="image">
                                 </div>
                             </a>
@@ -1135,8 +1136,8 @@ if (!isset($_SESSION['admin_id'])){
                                     </div>
 
                                     <div class="info text-center">
-                                        <span class="name">Andro Smith</span>
-                                        <p class="mb-3 email">hello@androsmith.com</p>
+                                        <span class="name"><?php echo $_SESSION['admin_name']?></span>
+                                        <p class="mb-3 email"><?php echo $_SESSION['admin_email']?></p>
                                     </div>
                                 </div>
 

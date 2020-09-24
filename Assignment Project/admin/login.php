@@ -8,7 +8,8 @@ if(isset($_POST['submit'])){
     $result = mysqli_query($conn, $query);
     $adminSet = mysqli_fetch_assoc($result);
     if(isset($adminSet['admin_id'])){
-        echo $_SESSION['admin_id'] = $adminSet['admin_id'];
+        $_SESSION['admin_id']=$adminSet['admin_id'];
+        $_SESSION['admin_email']=$adminSet['admin_email'];
         header("location:dashboard-ecommerce.php");
     } else{
         $error = "User Not Found";
@@ -77,7 +78,7 @@ if(isset($_POST['submit'])){
 
                     <button type="submit" name="submit" class="login-btn">Login</button>
 
-                    <p class="mb-0">Don’t have an account? <a href="register-with-image.html">Sign Up</a></p>
+                    <p class="mb-0">Don’t have an account? <a href="register-with-image.php ">Sign Up</a></p>
                 </form>
             </div>
         </div>

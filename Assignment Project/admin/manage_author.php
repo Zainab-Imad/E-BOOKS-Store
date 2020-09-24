@@ -22,6 +22,7 @@ if (isset($_POST['remove'])) {
 }
 
 include 'includes/header.php';
+die(print_r($_SESSION));
 ?>
 
 
@@ -43,6 +44,14 @@ include 'includes/header.php';
             <label>Author Name</label>
             <input type="text" name="author-name" class="form-control" required>
         </div>
+        <div class="form-group">
+            <label>Category Image</label>
+            <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                    <span class="input-group-text">Upload</span>
+                </div>
+            </div>
+        </div>00
         <button type="submit" name="submit" class="btn btn-lg btn-primary">Save</button>
     </form>
 </div>

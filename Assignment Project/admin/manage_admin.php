@@ -1,6 +1,5 @@
 <?php require 'includes/connection.php';
 
-
 if (isset($_POST['submit'])) {
     # code...
     $email    = $_POST['admin-email'];
@@ -9,9 +8,18 @@ if (isset($_POST['submit'])) {
     $img     = $_FILES['admin-image']['name'];
     $img_tmp = $_FILES['admin-image']['tmp_name'];
     $path    = 'uploads/admin/';
-    move_uploaded_file($img_tmp, $path . $img);
-    $query = "insert into admin(admin_fullName,admin_email,admin_img,admin_password) values('$fullName','$email','$img','$password')";
-    mysqli_query($conn,$query);
+    $query = "select * from admin where admin_email='$email'";
+    $result = mysqli_query($conn, $query);
+    $admin = mysqli_fetch_assoc($result);
+
+    if(isset($admin['admin_email']) == $email || $admin['admin_fullName'] == $fullName){
+        $error = "User Exist";
+    } else{
+        move_uploaded_file($img_tmp, $path . $img);
+        $query = "insert into admin(admin_fullName,admin_email,admin_img,admin_password) values('$fullName','$email','$img','$password')";
+        mysqli_query($conn,$query);
+    }
+
 }
 if(isset($_POST['update'])){
     $id       = $_POST['update-id'];
@@ -29,7 +37,7 @@ if(isset($_POST['update'])){
             mysqli_query($conn, $query);
         }else {
             $pathDel = 'uploads/admin/' . $image;
-            unlink($pathDel);
+            if(file_exists($pathDel)){unlink($pathDel);}
             move_uploaded_file($img_tmp, $path . $img);
             $query = "update admin set admin_fullName='$name',admin_email='$email',admin_img='$img',admin_password='$password' where admin_id = $id ";
             mysqli_query($conn, $query);
@@ -98,6 +106,9 @@ include 'includes/header.php';
         <div class="form-group">
             <label>Password</label>
             <input type="password" name="admin-password" class="form-control" required>
+        </div>
+        <div class="form-group">
+            <?php if (isset($error)){ echo "<div class='alert alert-danger text-center'>$error</div>";} ?>
         </div>
         <button type="submit" name="submit" class="btn btn-lg btn-primary">Save</button>
     </form>
