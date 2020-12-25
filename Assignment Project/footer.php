@@ -161,9 +161,10 @@
         });
         $(document).on("click","a[name='wishlist']", function (e) {
             var x = $(this).attr('pro');
+            console.log(x);
             $.ajax({
                 type : "GET",
-                url :"wishlistPro.php?pro-id="+x
+                url :"wishlistPro.php?pro-id="+x,
             });
         });
 

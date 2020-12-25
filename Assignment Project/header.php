@@ -1,5 +1,10 @@
 <?php 
-session_start();
+
+    if(!isset($_SESSION))
+    {
+        session_start();
+    }
+
 include 'admin/includes/connection.php';
 $sum  = 0;
 $i    = 0;

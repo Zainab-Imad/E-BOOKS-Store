@@ -303,7 +303,7 @@ $catID  = $pro['cat_id'];
                             <ul>
                                 <?php
                                 $query ="
-SELECT category.cat_id, `cat_name`, `cat_img`,count(product.cat_id) FROM `category` inner join product on product.cat_id=category.cat_id GROUP BY product.cat_id";
+SELECT category.cat_id, `cat_name`,count(product.cat_id) FROM `category` inner join product on product.cat_id=category.cat_id GROUP BY product.cat_id";
                                 $result = mysqli_query($conn,$query);
                                 while ( $cat = mysqli_fetch_assoc($result) ){
                                     echo "<li><a href='shop-grid.php?catId={$cat['cat_id']}'>{$cat['cat_name']}<span>{$cat['count(product.cat_id)']}</span></a></li>";

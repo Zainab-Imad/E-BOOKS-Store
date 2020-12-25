@@ -1,6 +1,7 @@
 <?php
 session_start();
 require 'includes/connection.php';
+$conn = mysqli_connect("localhost","root","","divisima");
 if(isset($_POST['submit'])){
     $email = $_POST['email'];
     $password = $_POST['password'];

@@ -1,13 +1,16 @@
 <?php
 
-include 'admin/includes/connection.php';
+require_once 'admin/includes/connection.php';
+session_start();
+//$conn = mysqli_connect("localhost","root","","divisima");
+
 if(isset($_POST['login'])){
-    session_start();
 
     $email = $_POST['email'];
     $password = $_POST['password'];
     $query = "select * from customer where customer_email='$email' and customer_password='$password'";
     $result = mysqli_query($conn, $query);
+
     $customer = mysqli_fetch_assoc($result);
 
     if(isset($customer['customer_id'])){
@@ -26,8 +29,8 @@ if (isset($_POST['register'])){
     $country  = $_POST['country'];
     $address  = $_POST['address'];
     $phone    = $_POST['phone'];
-    $query    = "insert into customer (customer_name,customer_email,customer_password,customer_country,customer_address,customer_phone) 
-                 values ('$name','$email','$password','$country','$address','$phone')";
+    $query    = "insert into customer (customer_name,customer_email,customer_country,customer_address,customer_phone,password) 
+                 values ('$name','$email','$country','$address','$phone','$password')";
     $result   = mysqli_query($conn, $query);
     $customer = mysqli_fetch_assoc($result);
     $query    = "select * from customer where customer_email='$email' and customer_password='$password'";
